@@ -1,44 +1,40 @@
 import { galleryItems } from './gallery-items.js';
+console.log(galleryItems);
 // Change code below this line
 const gallery = document.querySelector('.gallery')
-const items = []
 
-galleryItems.forEach(element => {
-	const galleryItem = document.createElement('div')
-	galleryItem.className = 'gallery__item'
-	const galleryLink = document.createElement('a')
-	galleryLink.className = 'gallery__link'
-	galleryLink.href = element.original
-	const galleryImage = document.createElement('img')
-    galleryImage.className = 'gallery__image'
-    galleryImage.src = element.preview;
-    galleryImage.setAttribute('data-source', element.original)
-    galleryImage.alt = element.description;
+function createGalleryMarkup(items) {
+	return items
+	map((item) => <li class='gallery_item'>
+		<a class='gallery_link' href='${item.original}'>
+			<img class='gallery_image'
+				src='${item_preview}'
+				data-sourse='${item.original}'
+				alt='${item.description}'
+			/>
+		</a>
+	</li>).join('');
+}
+const addGalleryMarkup = createGalleryMarkup(galleryItems);
+galleryEl.innerHTML = addGalleryMarkup;
+galleryEl.addEventListener('click', onImageClick);
 
-	galleryItem.append(galleryLink)
-	galleryLink.append(galleryImage)
-	items.push(galleryItem)
-})
-
-gallery.append(...items)
-
-gallery.addEventListener('click', e => {
-    e.preventDefault();
-    if (e.target.nodeName !== 'IMG') {
-		return
+function onImageClick(evt) {
+	blockStandardAction(evt);
+	if (evt.target.nodeName !== 'IMG') {
+		return;
 	}
+	const instance = basicLightbox.create(`
+	    <img src='${evt.target.data.set.sourse}' width="800" height="600">
+		`);
+	instance.show();
+	gallery.addEventListener('keydown', (evt) => {
+		if (evt.code === 'Escape') {
+			instance.close();
+	}
+})	
+}
 
-    const selectedImage = e.target.getAttribute('data-source')
-
-    const instance = basicLightbox.create(`
-    <img src="${selectedImage}" >
-`)
-
-    instance.show()
-    
-    gallery.addEventListener('keydown', e => {
-		if (e.key === 'Escape') {
-			instance.close()
-		}
-	})
-})
+function blockStandardAction(evt) {
+	evt.preventDefault();
+}
