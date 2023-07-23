@@ -20,7 +20,7 @@ gallery.insertAdjacentHTML('afterbegin', galleryList);
 
 
 gallery.onclick = (evt) => {
- if (evt.target.tagName !== 'IMG') {
+ if (evt.target.nodeName !== 'IMG') {
         return;
     }
     evt.preventDefault();
